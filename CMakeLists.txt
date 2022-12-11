@@ -7,7 +7,8 @@ project(BlockBuildingGame)
 add_executable(
         BlockBuildingGame
         src/main.cpp
-        src/Engine/Camera.h src/Engine/Camera.cpp)
+        src/Engine/Camera/Camera.h
+        src/Engine/Camera/Camera.cpp
 
 #add custom target for copying resource files to binary folder
 add_custom_target(
