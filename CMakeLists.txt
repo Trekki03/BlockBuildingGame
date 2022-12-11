@@ -9,6 +9,8 @@ add_executable(
         src/main.cpp
         src/Engine/Camera/Camera.h
         src/Engine/Camera/Camera.cpp
+        src/Engine/Camera/CameraController.cpp
+        src/Engine/Camera/CameraController.h)
 
 #add custom target for copying resource files to binary folder
 add_custom_target(
