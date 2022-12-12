@@ -6,8 +6,12 @@ project(BlockBuildingGame)
 #add source files
 add_executable(
         BlockBuildingGame
+        dependencies/glad/src/glad.c
         src/main.cpp
-)
+        src/Engine/Render/Camera/Camera.h
+        src/Engine/Render/Camera/Camera.cpp
+        src/Engine/Render/Camera/CameraController.cpp
+        src/Engine/Render/Camera/CameraController.h src/Engine/Render/VertexBuffer.cpp src/Engine/Render/VertexBuffer.h src/Engine/Render/IndexBuffer.cpp src/Engine/Render/IndexBuffer.h src/Engine/Render/VertexArrayObject.cpp src/Engine/Render/VertexArrayObject.h src/Engine/Render/ShaderProgram.cpp src/Engine/Render/ShaderProgram.h src/Engine/Util/FileIO.cpp src/Engine/Util/FileIO.h src/Engine/Render/Texture2D.cpp src/Engine/Render/Texture2D.h src/Engine/OS/WindowProcessing.cpp src/Engine/OS/WindowProcessing.h)
 
 #add custom target for copying resource files to binary folder
 add_custom_target(
@@ -26,6 +30,9 @@ include_directories(
         "${CMAKE_SOURCE_DIR}/dependencies/glad/include"
         "${CMAKE_SOURCE_DIR}/dependencies/stb"
         "${CMAKE_SOURCE_DIR}/dependencies/glm"
+        "${CMAKE_SOURCE_DIR}/src"
+        "${CMAKE_SOURCE_DIR}/src/Engine"
+
 
 )
 target_link_libraries(
