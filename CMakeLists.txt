@@ -10,7 +10,7 @@ add_executable(
         src/Engine/Camera/Camera.h
         src/Engine/Camera/Camera.cpp
         src/Engine/Camera/CameraController.cpp
-        src/Engine/Camera/CameraController.h src/Engine/OpenGL/VertexBuffer.cpp src/Engine/OpenGL/VertexBuffer.h src/Engine/OpenGL/IndexBuffer.cpp src/Engine/OpenGL/IndexBuffer.h src/Engine/OpenGL/VertexArrayObject.cpp src/Engine/OpenGL/VertexArrayObject.h src/Engine/OpenGL/ShaderProgram.cpp src/Engine/OpenGL/ShaderProgram.h src/Engine/Util/FileIO.cpp src/Engine/Util/FileIO.h src/Engine/OpenGL/Texture2D.cpp src/Engine/OpenGL/Texture2D.h)
+        src/Engine/Camera/CameraController.h src/Engine/OpenGL/VertexBuffer.cpp src/Engine/OpenGL/VertexBuffer.h src/Engine/OpenGL/IndexBuffer.cpp src/Engine/OpenGL/IndexBuffer.h src/Engine/OpenGL/VertexArrayObject.cpp src/Engine/OpenGL/VertexArrayObject.h src/Engine/OpenGL/ShaderProgram.cpp src/Engine/OpenGL/ShaderProgram.h src/Engine/Util/FileIO.cpp src/Engine/Util/FileIO.h src/Engine/OpenGL/Texture2D.cpp src/Engine/OpenGL/Texture2D.h src/Engine/OS/WindowProcessing.cpp src/Engine/OS/WindowProcessing.h)
 
 #add custom target for copying resource files to binary folder
 add_custom_target(
@@ -30,6 +30,8 @@ include_directories(
         "${CMAKE_SOURCE_DIR}/dependencies/stb"
         "${CMAKE_SOURCE_DIR}/dependencies/glm"
         "${CMAKE_SOURCE_DIR}/src"
+        "${CMAKE_SOURCE_DIR}/src/Engine"
+
 
 )
 target_link_libraries(
