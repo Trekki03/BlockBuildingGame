@@ -24,7 +24,7 @@ namespace engine
         void Bind() const;
         /*
          * not static for more consistent style.
-         * vb.Bind() and vb.Unbind() instead of VertexBuffer::Unbind()
+         * vao.Bind() and vao.Unbind() instead of VertexArrayObject::Unbind()
          */
         inline void Unbind() const
         {

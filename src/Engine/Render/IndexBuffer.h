@@ -18,7 +18,7 @@ namespace engine
 
         /*
          * not static for more consistent style.
-         * vb.Bind() and vb.Unbind() instead of VertexBuffer::Unbind()
+         * ib.Bind() and ib.Unbind() instead of IndexBuffer::Unbind()
          */
         inline void Unbind() const
         {
