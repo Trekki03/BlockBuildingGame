@@ -1,6 +1,6 @@
 #include "WindowProcessing.h"
 #include <glm/glm.hpp>
-#include "Camera/CameraController.h"
+#include "Render/Camera/CameraController.h"
 
 bool wireMode = false;
 bool lastKeyState_V = false;
