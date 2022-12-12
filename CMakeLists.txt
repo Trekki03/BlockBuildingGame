@@ -6,6 +6,7 @@ project(BlockBuildingGame)
 #add source files
 add_executable(
         BlockBuildingGame
+        dependencies/glad/src/glad.c
         src/main.cpp
         src/Engine/Render/Camera/Camera.h
         src/Engine/Render/Camera/Camera.cpp
