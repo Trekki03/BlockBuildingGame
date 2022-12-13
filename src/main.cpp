@@ -12,6 +12,7 @@
 #include "Render/ShaderProgram.h"
 #include "Render/Texture2D.h"
 #include "Render/Camera/CameraController.h"
+#include "Render/Objects/Primitives.h"
 
 engine::CameraController camController;
 float deltaTime = 0.0f, lastFrame = 0.0f;
@@ -51,78 +52,8 @@ int main()
         return -1;
     }
 
-
-    float vertices[] = {
-
-            //Front
-            -0.5f,    -0.5f,  0.5f,   0.0f,   0.0f,   1.0f,   0.0f,   0.0f,   // 0
-            0.5f,     -0.5f,  0.5f,   0.0f,   0.0f,   1.0f,   1.0f,   0.0f,   // 1
-            0.5f,     0.5f,   0.5f,   0.0f,   0.0f,   1.0f,   1.0f,   1.0f,   // 2
-            -0.5f,    0.5f,   0.5f,   0.0f,   0.0f,   1.0f,   0.0f,   1.0f,   // 3
-
-            //Right Side
-            0.5f,     -0.5f,  0.5f,   1.0f,   0.0f,   0.0f,   0.0f,   0.0f,   // 4
-            0.5,      -0.5f,  -0.5f,  1.0f,   0.0f,   0.0f,   1.0f,   0.0f,   // 5
-            0.5f,     0.5f,   -0.5f,  1.0f,   0.0f,   0.0f,   1.0f,   1.0f,   // 6
-            0.5f,     0.5f,   0.5f,   1.0f,   0.0f,   0.0f,   0.0f,   1.0f,   // 7
-
-            //Back
-            0.5f,     -0.5f,  -0.5f,  0.0f,   0.0f,   -1.0f,  0.0f,   0.0f,   // 8
-            -0.5f,    -0.5f,  -0.5f,  0.0f,   0.0f,   -1.0f,  1.0f,   0.0f,   // 9
-            -0.5f,    0.5f,   -0.5f,  0.0f,   0.0f,   -1.0f,  1.0f,   1.0f,   // 10
-            0.5f,     0.5f,   -0.5f,  0.0f,   0.0f,   -1.0f,  0.0f,   1.0f,   // 11
-
-            //Left Side
-            -0.5f,    -0.5f,  -0.5f,  -1.0f,  0.0f,   0.0f,   0.0f,   0.0f,   // 12
-            -0.5f,    -0.5f,  0.5f,   -1.0f,  0.0f,   0.0f,   1.0f,   0.0f,   // 13
-            -0.5f,    0.5f,   0.5f,   -1.0f,  0.0f,   0.0f,   1.0f,   1.0f,   // 14
-            -0.5f,    0.5f,   -0.5f,  -1.0f,  0.0f,   0.0f,   0.0f,   1.0f,   // 15
-
-            //Bottom
-            0.5f,     -0.5f,  -0.5f,  0.0f,   -1.0f,  0.0f,   1.0f,   0.0f,   // 16
-            -0.5f,    -0.5f,  -0.5f,  0.0f,   -1.0f,  0.0f,   0.0f,   0.0f,   // 17
-            -0.5f,    -0.5f,  0.5f,   0.0f,   -1.0f,  0.0f,   0.0f,   1.0f,   // 18
-            0.5f,     -0.5f,  0.5f,   0.0f,   -1.0f,  0.0f,   1.0f,   1.0f,   // 19
-
-            //Top
-            -0.5f,    0.5f,   0.5f,   0.0f,   1.0f,   0.0f,   0.0f,   0.0f,   // 20
-            0.5f,     0.5f,   0.5f,   0.0f,   1.0f,   0.0f,   1.0f,   0.0f,   // 21
-            0.5f,     0.5f,   -0.5f,  0.0f,   1.0f,   0.0f,   1.0f,   1.0f,   // 22
-            -0.5f,    0.5f,   -0.5f,  0.0f,   1.0f,   0.0f,   0.0f,   1.0f    // 23
-    };
-
-    unsigned int indices[] = {
-
-            //Front
-            0,   1,   3,
-            1,   2,   3,
-
-            //Right Side
-            4,   5,   7,
-            5,   6,  7,
-
-            //Back
-            8,  9,  11,
-            9,  10, 11,
-
-            //Left Side
-            12, 13, 15,
-            13, 14, 15,
-
-            //Bottom
-            16, 17, 19,
-            17, 18, 19,
-
-            //Top
-            20, 21, 23,
-            21, 22, 23
-
-    };
-
-
-
-    engine::VertexBuffer vb(vertices, sizeof(vertices), GL_STATIC_DRAW);
-    engine::IndexBuffer ib(indices, sizeof(indices), GL_STATIC_DRAW);
+    engine::VertexBuffer vb(engine::primitives::cubeVertices, sizeof(engine::primitives::cubeVertices), GL_STATIC_DRAW);
+    engine::IndexBuffer ib(engine::primitives::cubeIndices, sizeof(engine::primitives::cubeIndices), GL_STATIC_DRAW);
 
     engine::VertexArrayObject vao;
     vao.AddIndexBuffer(ib);
