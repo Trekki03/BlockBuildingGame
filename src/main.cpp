@@ -13,7 +13,7 @@
 #include "Render/Texture2D.h"
 #include "Render/Camera/CameraController.h"
 #include "Render/Objects/Primitives.h"
-
+#include "Game/World/Objects/BlockManager.h"
 engine::CameraController camController;
 float deltaTime = 0.0f, lastFrame = 0.0f;
 
@@ -52,24 +52,13 @@ int main()
         return -1;
     }
 
-    engine::VertexBuffer vb(engine::primitives::cubeVertices, sizeof(engine::primitives::cubeVertices), GL_STATIC_DRAW);
-    engine::IndexBuffer ib(engine::primitives::cubeIndices, sizeof(engine::primitives::cubeIndices), GL_STATIC_DRAW);
-
-    engine::VertexArrayObject vao;
-    vao.AddIndexBuffer(ib);
-    vao.SetVertexAttribPointer(vb, 0, 3, GL_FLOAT, false, 8 * sizeof(float), nullptr);
-    vao.SetVertexAttribPointer(vb, 1, 3, GL_FLOAT, false, 8 * sizeof(float), (void*) (3 * sizeof(float)));
-    vao.SetVertexAttribPointer(vb, 2, 2, GL_FLOAT, false, 8 * sizeof(float), (void*) (6 * sizeof(float)));
-    vao.EnableVertexAttribPointer(0);
-    vao.EnableVertexAttribPointer(1);
-    vao.EnableVertexAttribPointer(2);
-
+    game::BlockManager manager;
 
     engine::ShaderProgram basicShader("res/shader/basic.vert", "res/shader/basic.frag");
     engine::ShaderProgram lightSourceShader("res/shader/basic.vert", "res/shader/lightSource.frag");
 
-    engine::Texture2D diffuseMap("res/textures/box2.png", GL_RGBA, GL_RGB, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR, true);
-    engine::Texture2D specularMap("res/textures/box2_spec.png", GL_RGBA, GL_RGB, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR, true);
+    engine::Texture2D diffuseMap("res/textures/TextureAtlas.jpg", GL_RGB, GL_RGB, GL_REPEAT, GL_REPEAT, GL_NEAREST, GL_NEAREST, false);
+    engine::Texture2D specularMap("res/textures/TextureAtlas.jpg", GL_RGB, GL_RGB, GL_REPEAT, GL_REPEAT, GL_NEAREST, GL_NEAREST, false);
     diffuseMap.SetTextureSlot(0);
     specularMap.SetTextureSlot(1);
     basicShader.LinkTextureSlotToUniform("material.diffuse", 0 );
@@ -89,7 +78,7 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        vao.Bind();
+        manager.getBlockVao(1u, true, true, true, true, true, true)->Bind();
 
         glm::mat4 projection;
         projection = glm::perspective(glm::radians(camController.GetActiveCameraPointer()->GetFov()), 800.0f / 600.0f, 0.1f, 100.0f);
@@ -103,25 +92,36 @@ int main()
 
 
         basicShader.Bind();
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0, 0, -1));
-        basicShader.SetUniformMatrix4fv("model", 1, false, glm::value_ptr(model));
 
         basicShader.SetUniform1f("material.shininess", 32.0f);
 
-        basicShader.SetUniform3f("light.position", {2.0f, 0.0f, 1.0f});
+        basicShader.SetUniform3f("light.position", {2.0f, 6.0f, 1.0f});
         basicShader.SetUniform3f("light.ambient", {0.2f, 0.2f, 0.2f});
         basicShader.SetUniform3f("light.diffuse", {0.5f, 0.5f, 0.5f});
         basicShader.SetUniform3f("light.specular", {1.0f, 1.0f, 1.0f});
 
         basicShader.SetUniform3f("viewPos", {camController.GetActiveCameraPointer()->GetPositionVector().x,camController.GetActiveCameraPointer()->GetPositionVector().y,camController.GetActiveCameraPointer()->GetPositionVector().z});
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
+
+        glm::mat4 model;
+
+        for(int x = 0; x < 16; x++)
+        {
+            for(int z = 0; z < 16; z++)
+            {
+                model = glm::mat4(1.0f);
+                model = glm::translate(model, glm::vec3(x, 0, z));
+                basicShader.SetUniformMatrix4fv("model", 1, false, glm::value_ptr(model));
+                glDrawElements(GL_TRIANGLES, manager.getVertexCount(true,true,true,true,true,true), GL_UNSIGNED_INT, nullptr);
+            }
+        }
+
+
         basicShader.Unbind();
 
         lightSourceShader.Bind();
         model = glm::mat4(1.0f);
         model = glm::scale(model, glm::vec3(0.3, 0.3, 0.3));
-        model = glm::translate(model, glm::vec3(2, 0, 1));
+        model = glm::translate(model, glm::vec3(2, 6, 1));
         lightSourceShader.SetUniformMatrix4fv("model", 1, false, glm::value_ptr(model));
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
         lightSourceShader.Unbind();
@@ -133,3 +133,4 @@ int main()
     glfwTerminate();
     return 0;
 }
+
