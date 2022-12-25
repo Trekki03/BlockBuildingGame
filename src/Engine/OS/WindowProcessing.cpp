@@ -47,7 +47,7 @@ namespace engine
             lastKeyState_V = false;
         }
 
-        const float cameraSpeed = 2.5f * deltaTime;
+        const float cameraSpeed = 10.0f * deltaTime;
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {

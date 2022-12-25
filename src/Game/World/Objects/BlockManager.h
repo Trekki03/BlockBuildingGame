@@ -16,22 +16,27 @@ namespace game
     class BlockManager
     {
     private:
-        std::map<uint32_t, engine::VertexArrayObject*> vaos;
-        std::map<uint32_t, unsigned int> vertexCount;
-        std::vector<engine::VertexBuffer*> vbs;
-        std::vector<engine::IndexBuffer*> ibs;
         game::world::object::BlockAtlas blockAtlas;
+        std::map<uint32_t, std::vector<float>*> vbs;
+        std::map<uint32_t, std::vector<unsigned >*> ibs;
+        std::map<uint32_t, unsigned int> vertexCount;
+
     private:
-        uint32_t getBlockCode(uint8_t blockID, bool hasTop, bool hasBottom, bool hasBack, bool hasFront, bool hasLeft, bool hasRight);
+        static uint32_t GetBlockCode(uint8_t blockID, bool hasTop, bool hasBottom, bool hasBack, bool hasFront, bool hasLeft, bool hasRight);
+
         template<typename T>
-        void addDataFromArrayIntoVector(std::vector<T>* vector, T* array, int start, int number);
-        void addSide(std::vector<float>* vector, int start, glm::vec2 texPos);
-        void addIndicesforSide(std::vector<unsigned int>* vector, int offset);
+        void AddDataFromArrayIntoVector(std::vector<T>* vector, T* array, int start, int number);
+
+        void AddVerticesForSide(std::vector<float>* vector, int start, glm::vec2 texPos);
+        static void AddIndicesForSide(std::vector<unsigned int> *vector, int offset);
     public:
         BlockManager() = default;
-        //TODO Deconstuctor deleting als vb, ib and vao
-        engine::VertexArrayObject* getBlockVao(uint8_t blockID, bool hasTop, bool hasBottom, bool hasBack, bool hasFront, bool hasLeft, bool hasRight);
-        unsigned int getVertexCount(bool hasTop, bool hasBottom, bool hasBack, bool hasFront, bool hasLeft, bool hasRight);
+        ~BlockManager();
+
+        std::vector<float>* GetBlockVertexBuffer(uint8_t blockID, bool hasTop, bool hasBottom, bool hasBack, bool hasFront, bool hasLeft, bool hasRight);
+        std::vector<unsigned >* GetBlockIndexBuffer(uint8_t blockID, bool hasTop, bool hasBottom, bool hasBack, bool hasFront, bool hasLeft, bool hasRight);
+
+        static unsigned int GetVertexCount(bool hasTop, bool hasBottom, bool hasBack, bool hasFront, bool hasLeft, bool hasRight);
     };
 
 } // game

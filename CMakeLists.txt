@@ -32,7 +32,7 @@ add_executable(
         src/Game/World/Objects/BlockManager.h
         src/Game/World/Objects/BlockAtlas.cpp
         src/Engine/Render/Objects/Primitives.cpp
-)
+        src/Game/World/WorldGen/Chunk.cpp src/Game/World/WorldGen/Chunk.h)
 
 #add custom target for copying resource files to binary folder
 add_custom_target(

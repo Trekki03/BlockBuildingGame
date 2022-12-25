@@ -18,102 +18,120 @@
 
 namespace game
 {
-    //engine::VertexArrayObject*
-    engine::VertexArrayObject* BlockManager::getBlockVao(uint8_t blockID, bool hasTop, bool hasBottom, bool hasBack, bool hasFront, bool hasLeft, bool hasRight)
+
+    BlockManager::~BlockManager()
     {
-        //if block has no sides to show, return a nullptr
-        if(!hasTop && !hasBottom && !hasBack && !hasFront && !hasLeft && !hasRight)
+        for(auto& [key, value] : vbs)
+        {
+            delete value;
+        }
+
+        for(auto& [key, value] : ibs)
+        {
+            delete value;
+        }
+    }
+
+    std::vector<float>* BlockManager::GetBlockVertexBuffer(uint8_t blockID, bool hasTop, bool hasBottom, bool hasBack, bool hasFront, bool hasLeft, bool hasRight)
+    {
+        // If no block
+        if((blockID == 0) || (!hasTop && !hasBottom && !hasBack && !hasFront && !hasLeft && !hasRight))
         {
             return nullptr;
         }
 
-        //if vao for block already exists, return it.
-        uint32_t blockCode = getBlockCode(blockID, hasTop, hasBottom, hasBack, hasFront, hasLeft, hasRight);
-        if(vaos.contains(blockCode))
+        uint32_t blockCode = GetBlockCode(blockID, hasTop, hasBottom, hasBack, hasFront, hasLeft, hasRight);
+
+        //if already created
+        if(vbs.contains(blockCode))
         {
-            return vaos.at(blockCode);
+            return vbs.at(blockCode);
         }
 
-        //if vao doesn't already exist, create it.
-        engine::VertexArrayObject* vao = new engine::VertexArrayObject;
-
-        //Create Vertexbuffer
-        std::vector<float> vertices;
+        //if new
+        auto* vertices = new std::vector<float>;
         if(hasFront)
         {
-            addSide(&vertices, VERT_FRONT_START, blockAtlas.getSideTexPos(blockID));
+            AddVerticesForSide(vertices, VERT_FRONT_START, blockAtlas.getSideTexPos(blockID));
         }
         if(hasRight)
         {
-            addSide(&vertices, VERT_RIGHT_START, blockAtlas.getSideTexPos(blockID));
+            AddVerticesForSide(vertices, VERT_RIGHT_START, blockAtlas.getSideTexPos(blockID));
         }
         if(hasBack)
         {
-            addSide(&vertices, VERT_BACK_START, blockAtlas.getSideTexPos(blockID));
+            AddVerticesForSide(vertices, VERT_BACK_START, blockAtlas.getSideTexPos(blockID));
         }
         if(hasLeft)
         {
-            addSide(&vertices, VERT_LEFT_START, blockAtlas.getSideTexPos(blockID));
+            AddVerticesForSide(vertices, VERT_LEFT_START, blockAtlas.getSideTexPos(blockID));
         }
         if(hasBottom)
         {
-            addSide(&vertices, VERT_BOTTOM_START, blockAtlas.getBottomTexPos(blockID));
+            AddVerticesForSide(vertices, VERT_BOTTOM_START, blockAtlas.getBottomTexPos(blockID));
         }
         if(hasTop)
         {
-            addSide(&vertices, VERT_TOP_START, blockAtlas.getTopTexPos(blockID));
+            AddVerticesForSide(vertices, VERT_TOP_START, blockAtlas.getTopTexPos(blockID));
         }
-        engine::VertexBuffer* vb = new engine::VertexBuffer(vertices.data(), vertices.size() * sizeof(float), GL_STATIC_DRAW);
-        vbs.push_back(vb);
+        vbs.insert({blockCode, vertices});
+        return vertices;
+    }
 
-        //Create Indexbuffer
-        std::vector<unsigned int> indices;
+    std::vector<unsigned >* BlockManager::GetBlockIndexBuffer(uint8_t blockID, bool hasTop, bool hasBottom, bool hasBack, bool hasFront, bool hasLeft, bool hasRight)
+    {
+        // If no block
+        if((blockID == 0) || (!hasTop && !hasBottom && !hasBack && !hasFront && !hasLeft && !hasRight))
+        {
+            return nullptr;
+        }
+
+        uint32_t blockCode = GetBlockCode(blockID, hasTop, hasBottom, hasBack, hasFront, hasLeft, hasRight);
+
+        //if already created
+        if(ibs.contains(blockCode))
+        {
+            return ibs.at(blockCode);
+        }
+
+        //if new
+        auto* indices = new std::vector<unsigned int>;
         int offset = 0;
         if(hasFront)
         {
-            addIndicesforSide(&indices, offset);
+            AddIndicesForSide(indices, offset);
             offset+=4;
         }
         if(hasRight)
         {
-            addIndicesforSide(&indices, offset);
+            AddIndicesForSide(indices, offset);
             offset+=4;
         }
 
         if(hasBack)
         {
-            addIndicesforSide(&indices, offset);
+            AddIndicesForSide(indices, offset);
             offset+=4;
         }
         if(hasLeft)
         {
-            addIndicesforSide(&indices, offset);
+            AddIndicesForSide(indices, offset);
             offset+=4;
         }
         if(hasBottom)
         {
-            addIndicesforSide(&indices, offset);
+            AddIndicesForSide(indices, offset);
             offset+=4;
         }
         if(hasTop)
         {
-            addIndicesforSide(&indices, offset);
-            offset+=4;
+            AddIndicesForSide(indices, offset);
         }
-        engine::IndexBuffer* ib = new engine::IndexBuffer(indices.data(), indices.size()*sizeof(unsigned int), GL_STATIC_DRAW);
-        ibs.push_back(ib);
-
-        vao->AddIndexBuffer(*ib);
-        vao->SetVertexAttribPointer(*vb, 0, 3, GL_FLOAT, false, 8 * sizeof(float), nullptr);
-        vao->SetVertexAttribPointer(*vb, 1, 3, GL_FLOAT, false, 8 * sizeof(float), (void*) (3 * sizeof(float)));
-        vao->SetVertexAttribPointer(*vb, 2, 2, GL_FLOAT, false, 8 * sizeof(float), (void*) (6 * sizeof(float)));
-        vao->EnableVertexAttribPointer(0);
-        vao->EnableVertexAttribPointer(1);
-        vao->EnableVertexAttribPointer(2);
-        return vao;
+        ibs.insert({blockCode, indices});
+        return indices;
     }
 
-    unsigned int BlockManager::getVertexCount(bool hasTop, bool hasBottom, bool hasBack, bool hasFront, bool hasLeft, bool hasRight)
+    unsigned int BlockManager::GetVertexCount(bool hasTop, bool hasBottom, bool hasBack, bool hasFront, bool hasLeft, bool hasRight)
     {
         unsigned int count = 0;
         if(hasFront)
@@ -124,7 +142,6 @@ namespace game
         {
             count+=6;
         }
-
         if(hasBack)
         {
             count+=6;
@@ -144,7 +161,7 @@ namespace game
         return count;
     }
 
-    void BlockManager::addIndicesforSide(std::vector<unsigned int>* vector, int offset)
+    void BlockManager::AddIndicesForSide(std::vector<unsigned int> *vector, int offset)
     {
         vector->push_back(offset);
         vector->push_back(offset+1);
@@ -154,31 +171,31 @@ namespace game
         vector->push_back(offset+3);
     }
 
-    void BlockManager::addSide(std::vector<float>* vector, int start, glm::vec2 texPos)
+    void BlockManager::AddVerticesForSide(std::vector<float>* vector, int start, glm::vec2 texPos)
     {
-        addDataFromArrayIntoVector(vector, engine::primitives::cubeVertices,
+        AddDataFromArrayIntoVector(vector, engine::primitives::cubeVertices,
                                    start, VALUES_PER_VERT);
         vector->push_back(texPos.x*ATLAS_FACTOR);
         vector->push_back(texPos.y*ATLAS_FACTOR);
 
-        addDataFromArrayIntoVector(vector, engine::primitives::cubeVertices,
-                                    start + VALUES_PER_VERT, VALUES_PER_VERT);
+        AddDataFromArrayIntoVector(vector, engine::primitives::cubeVertices,
+                                   start + VALUES_PER_VERT, VALUES_PER_VERT);
         vector->push_back(texPos.x*ATLAS_FACTOR+ATLAS_FACTOR);
         vector->push_back(texPos.y*ATLAS_FACTOR);
 
-        addDataFromArrayIntoVector(vector, engine::primitives::cubeVertices,
+        AddDataFromArrayIntoVector(vector, engine::primitives::cubeVertices,
                                    start + 2 * VALUES_PER_VERT, VALUES_PER_VERT);
         vector->push_back(texPos.x*ATLAS_FACTOR+ATLAS_FACTOR);// + ATLAS_FACTOR);
         vector->push_back(texPos.y*ATLAS_FACTOR+ATLAS_FACTOR);// + ATLAS_FACTOR);
 
-        addDataFromArrayIntoVector(vector, engine::primitives::cubeVertices,
+        AddDataFromArrayIntoVector(vector, engine::primitives::cubeVertices,
                                    start + 3 * VALUES_PER_VERT, VALUES_PER_VERT);
         vector->push_back(texPos.x*ATLAS_FACTOR);
         vector->push_back(texPos.y*ATLAS_FACTOR+ATLAS_FACTOR);// + ATLAS_FACTOR);
     }
 
     template<typename T>
-    void BlockManager::addDataFromArrayIntoVector(std::vector<T>* vector, T* array, int start, int number)
+    void BlockManager::AddDataFromArrayIntoVector(std::vector<T>* vector, T* array, int start, int number)
     {
         for(int i = start; i < start+number; i++)
         {
@@ -197,7 +214,7 @@ namespace game
      * 6-13 - Block ID
      * Rest - not used
      */
-    uint32_t BlockManager::getBlockCode(uint8_t blockID, bool hasTop, bool hasBottom, bool hasBack, bool hasFront, bool hasLeft, bool hasRight)
+    uint32_t BlockManager::GetBlockCode(uint8_t blockID, bool hasTop, bool hasBottom, bool hasBack, bool hasFront, bool hasLeft, bool hasRight)
     {
         uint32_t output = 0;
 
@@ -215,6 +232,10 @@ namespace game
         //Add hasBack
         output <<= 1;
         output |= hasBack;
+
+        //Add hasBack
+        output <<= 1;
+        output |= hasFront;
 
         //Add hasBottom
         output <<= 1;

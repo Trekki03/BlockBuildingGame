@@ -11,7 +11,9 @@ namespace game::world::object
 
     void BlockAtlas::addBlocks()
     {
+        //Block ID // Block Object (BlockID, TexTopPos, TexBottomPos, TexSidePos)
         blockAtlas.insert({1u,{1u,glm::vec2(0.0f,0.0f),glm::vec2( 1.0f,0.0f),glm::vec2( 2.0f,0.0f)}});
+        blockAtlas.insert( { 2u, { 2u, glm::vec2(3.0f, 0.0f), glm::vec2(3.0f, 0.0f), glm::vec2(3.0f, 0.0f)}});
     }
 
     glm::vec2 BlockAtlas::getSideTexPos(uint8_t blockID)
