@@ -11,7 +11,28 @@ add_executable(
         src/Engine/Render/Camera/Camera.h
         src/Engine/Render/Camera/Camera.cpp
         src/Engine/Render/Camera/CameraController.cpp
-        src/Engine/Render/Camera/CameraController.h src/Engine/Render/VertexBuffer.cpp src/Engine/Render/VertexBuffer.h src/Engine/Render/IndexBuffer.cpp src/Engine/Render/IndexBuffer.h src/Engine/Render/VertexArrayObject.cpp src/Engine/Render/VertexArrayObject.h src/Engine/Render/ShaderProgram.cpp src/Engine/Render/ShaderProgram.h src/Engine/Util/FileIO.cpp src/Engine/Util/FileIO.h src/Engine/Render/Texture2D.cpp src/Engine/Render/Texture2D.h src/Engine/OS/WindowProcessing.cpp src/Engine/OS/WindowProcessing.h)
+        src/Engine/Render/Camera/CameraController.h
+        src/Engine/Render/VertexBuffer.cpp
+        src/Engine/Render/VertexBuffer.h
+        src/Engine/Render/IndexBuffer.cpp
+        src/Engine/Render/IndexBuffer.h
+        src/Engine/Render/VertexArrayObject.cpp
+        src/Engine/Render/VertexArrayObject.h
+        src/Engine/Render/ShaderProgram.cpp
+        src/Engine/Render/ShaderProgram.h
+        src/Engine/Util/FileIO.cpp
+        src/Engine/Util/FileIO.h
+        src/Engine/Render/Texture2D.cpp
+        src/Engine/Render/Texture2D.h
+        src/Engine/OS/WindowProcessing.cpp
+        src/Engine/OS/WindowProcessing.h
+        src/Engine/Render/Objects/Primitives.h
+        src/Game/World/Objects/BlockAtlas.h
+        src/Game/World/Objects/BlockManager.cpp
+        src/Game/World/Objects/BlockManager.h
+        src/Game/World/Objects/BlockAtlas.cpp
+        src/Engine/Render/Objects/Primitives.cpp
+        src/Game/World/WorldGen/Chunk.cpp src/Game/World/WorldGen/Chunk.h)
 
 #add custom target for copying resource files to binary folder
 add_custom_target(

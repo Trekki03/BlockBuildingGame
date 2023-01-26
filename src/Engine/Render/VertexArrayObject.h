@@ -11,12 +11,13 @@ namespace engine
     {
     private:
         unsigned int m_ObjectID{};
+        unsigned int vertexCount;
     public:
         VertexArrayObject();
         ~VertexArrayObject();
 
         void AddIndexBuffer(IndexBuffer &ib) const;
-        void SetVertexAttribPointer(VertexBuffer &vb, unsigned int index, int size, GLenum type, bool normalized, int stride, const void* offset) const;
+        void SetVertexAttribPointer(VertexBuffer &vb, unsigned int index, int size, GLenum type, bool normalized, int stride, const void* offset);
 
         void EnableVertexAttribPointer(unsigned int index) const;
         void DisableVertexAttribPointer() const;
@@ -30,6 +31,9 @@ namespace engine
         {
             glBindVertexArray(0);
         }
+
+        inline unsigned int GetVertexCount() {return vertexCount;}
+        inline void SetVertexCount(unsigned count) {vertexCount = count;}
     };
 
 }

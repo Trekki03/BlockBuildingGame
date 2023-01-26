@@ -16,7 +16,7 @@ namespace engine
         glDeleteVertexArrays(1, &m_ObjectID);
     }
 
-    void VertexArrayObject::SetVertexAttribPointer(VertexBuffer &vb, unsigned int index, int size, GLenum type, bool normalized, int stride, const void* offset) const
+    void VertexArrayObject::SetVertexAttribPointer(VertexBuffer &vb, unsigned int index, int size, GLenum type, bool normalized, int stride, const void* offset)
     {
         Bind();
         vb.Bind();
